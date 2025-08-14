@@ -22,6 +22,16 @@ public class EnemyGraphicTableEntry3DS
   public EnemyGraphicTableEntry3DS(U8[] data)
   {
     var encoding = Encoding.ASCII;
-    ModelFilename
+    ModelFilename = encoding.GetString(
+      data
+        .Take(ModelFilenameLength)
+        .Where(u8 => u8 != 0x00)
+        .ToArray());
+    if (!ModelFilename.Contains(".bam"))
+    {
+      throw new InvalidDataException("enemygraphic entry model filename didn't contain .bam; " +
+                                     "is probably malformed.");
+    }
+    UnknownData = data.Skip(ModelFilenameLength).ToArray();
   }
 }

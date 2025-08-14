@@ -26,8 +26,21 @@
 
     <ItemGroup>
       <None Update="Resources\3DS\EO4EnemyGraphic.tbl">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Resources\3DS\EO4EnemyGraphicEntry.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\3DS\EOUEnemyGraphic.tbl">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\3DS\EOUEnemyGraphicEntry.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LibEtrian\LibEtrian.csproj" />
     </ItemGroup>
 
 </Project>
