@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEtrian", "LibEtrian\LibEtrian.csproj", "{DBD01AF8-6436-47D8-943B-19AD44CAD2DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEtrianTests", "LibEtrianTests\LibEtrianTests.csproj", "{C36C51F6-B1C0-470E-9F31-04134D0B4D36}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,9 +12,5 @@ Global
 		{DBD01AF8-6436-47D8-943B-19AD44CAD2DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD01AF8-6436-47D8-943B-19AD44CAD2DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBD01AF8-6436-47D8-943B-19AD44CAD2DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C36C51F6-B1C0-470E-9F31-04134D0B4D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C36C51F6-B1C0-470E-9F31-04134D0B4D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C36C51F6-B1C0-470E-9F31-04134D0B4D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C36C51F6-B1C0-470E-9F31-04134D0B4D36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

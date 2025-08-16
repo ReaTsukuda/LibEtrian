@@ -29,12 +29,8 @@ public class EnemyGraphicTable3DS : List<EnemyGraphicTableEntry3DS>
       throw new InvalidDataException($"enemygraphic table length is not cleanly divisible by the " +
                                      $"entry length for {game} (0x{entryLength:X2}).");
     }
-    var entries = tableData
-      .Select((v, i) => new { Index = i, Value = v })
-      .GroupBy(v => v.Index / entryLength)
-      .Select(v => 
-        new EnemyGraphicTableEntry3DS(v.Select(a => a.Value).ToArray()))
-      .ToList();
+    var entries = tableData.Split(entryLength)
+      .Select(e => new EnemyGraphicTableEntry3DS(e));
     AddRange(entries);
   }
 }
