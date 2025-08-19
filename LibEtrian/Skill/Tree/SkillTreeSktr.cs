@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace LibEtrian.Skill.SkillTree;
+namespace LibEtrian.Skill.Tree;
 
 /// <summary>
 /// The skill tree format for EOU and all games after it. Contains both visual and data definitions for
