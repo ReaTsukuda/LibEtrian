@@ -37,16 +37,13 @@ public class Table : List<string>
       if (reader.PeekChar() != 0x0)
       {
         var nextChar = reader.ReadChar();
-        // Add the Unicode equivalent of the next character, if we have one.
-        if (SJISTables.FromFullwidth.ContainsKey(nextChar)) { buffer.Append(SJISTables.FromFullwidth[nextChar]); }
-        // Otherwise, just add the character.
-        else { buffer.Append(nextChar); }
+        buffer.Append(nextChar);
       }
       // Once we hit a null terminator, we add whatever's in the buffer to the list,
       // clear out the buffer, and advance past the terminator.
       else
       {
-        Add(buffer.ToString());
+        Add(buffer.ToString().Normalize(NormalizationForm.FormKC));
         buffer.Clear();
         reader.ReadByte();
       }

@@ -87,19 +87,10 @@ public class Bmd : Dictionary<string, string>
           reader.BaseStream.Seek(-1, SeekOrigin.Current);
           var nextChar = reader.ReadChar();
           messageIndex += 1;
-          if (SJISTables.FromFullwidth.ContainsKey(nextChar))
-          {
-            stringBuilder.Append(SJISTables.FromFullwidth[nextChar]);
-          }
-          else { stringBuilder.Append(nextChar); }
+          stringBuilder.Append(nextChar);
         }
       }
-      var message = stringBuilder.ToString();
-      // Remove trailing whitespace.
-      if (message.Last() == ' ')
-      {
-        message = message.Remove(message.Length - 1);
-      }
+      var message = stringBuilder.ToString().Normalize(NormalizationForm.FormKC).Trim();
       if (ContainsKey(messageId))
       {
         this[messageId] = message;
