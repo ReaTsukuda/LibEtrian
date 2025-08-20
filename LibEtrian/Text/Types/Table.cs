@@ -14,7 +14,7 @@ public class Table : List<string>
   /// </summary>
   /// <param name="location">The path to the requested tbl file.</param>
   /// <param name="longPointers">Whether the tbl file uses 4-byte pointers instead of 2-byte pointers.</param>
-  public Table(string location, bool longPointers)
+  public Table(string location, bool longPointers = false)
   {
     var encodingProviderInstance = CodePagesEncodingProvider.Instance;
     Encoding.RegisterProvider(encodingProviderInstance);
