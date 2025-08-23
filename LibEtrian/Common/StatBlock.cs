@@ -44,4 +44,14 @@ public class StatBlock
   /// An entity's WIS. Exists as padding in EO3 through EO2U, actually used in EO5 and EON.
   /// </summary>
   public S16 Wis { get; init; }
+
+  /// <summary>
+  /// An alias for when working with EO5 and EON.
+  /// </summary>
+  public S16 Int => Tec;
+
+  /// <summary>
+  /// This is primarily for debugging purposes.
+  /// </summary>
+  public override string ToString() => $"{MaxHp}, {MaxTp}, {Str}, {Tec}, {Vit}, {Wis}, {Agi}, {Luc}";
 }
