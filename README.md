@@ -34,6 +34,9 @@ Currently, the following files are supported with the following classes:
 * skt_[class].tbl
   * SkillTreeSktr
     * EOU, EO2U, EO5, EON
+* Stat growth tables, i.e. GrowthTable.tbl, GrowthKindTable.tbl
+  * StatGrowthTable
+    * All games
 * BMD text files [Incomplete]
   * Bmd
     * PQ, PQ2
