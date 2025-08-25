@@ -22,9 +22,9 @@ public class EquipItemV2(U8[] data)
   public S16 DamageType { get; } = BitConverter.ToInt16(data, 0x02);
   
   /// <summary>
-  /// Unknown. An item index of some kind?
+  /// The skill this equipment gives access to.
   /// </summary>
-  public S32 Unk1 { get; } = BitConverter.ToInt16(data, 0x04);
+  public S32 SkillId { get; } = BitConverter.ToInt32(data, 0x04);
 
   /// <summary>
   /// The ATK the item gives.
@@ -37,9 +37,9 @@ public class EquipItemV2(U8[] data)
   public S16 Def { get; } = BitConverter.ToInt16(data, 0x0A);
 
   /// <summary>
-  /// The disable vulnerability modifiers on this item. Functionally unused in EO3.
+  /// The vulnerability modifiers on this item. Functionally unused in EO4.
   /// </summary>
-  public U8[] DisableVulnerabilityModifiers { get; } = data.Skip(0x0C).Take(18).ToArray();
+  public U8[] VulnerabilityModifiers { get; } = data.Skip(0x0C).Take(18).ToArray();
 
   /// <summary>
   /// The stat modifiers on this item.

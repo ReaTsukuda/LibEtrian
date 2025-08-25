@@ -32,9 +32,9 @@ public class EquipItemV1(U8[] data)
   public S16 Def { get; } = BitConverter.ToInt16(data, 0x06);
 
   /// <summary>
-  /// The disable vulnerability modifiers on this item. Functionally unused in EO3.
+  /// The vulnerability modifiers on this item. Functionally unused in EO3.
   /// </summary>
-  public U8[] DisableVulnerabilityModifiers { get; } = data.Skip(0x08).Take(18).ToArray();
+  public U8[] VulnerabilityModifiers { get; } = data.Skip(0x08).Take(18).ToArray();
 
   /// <summary>
   /// The stat modifiers on this item. In EO3, this is only used on the game clear equipment: the Armoroad Emblem,
