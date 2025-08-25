@@ -4,7 +4,7 @@
 /// An individual gather point defined in the EO2U version of itemPoint.tbl, which controls gather points.
 /// </summary>
 [TableComponent(0x70)]
-public class GatherPointEO2U
+public class GatherPointV4
 {
   /// <summary>
   /// The floor this point is located on.
@@ -84,7 +84,7 @@ public class GatherPointEO2U
   /// </summary>
   public S32 IngredientAmountMax { get; }
 
-  public GatherPointEO2U(U8[] data)
+  public GatherPointV4(U8[] data)
   {
     Floor = BitConverter.ToInt32(data, 0x00);
     InternalId = BitConverter.ToInt32(data, 0x04);
