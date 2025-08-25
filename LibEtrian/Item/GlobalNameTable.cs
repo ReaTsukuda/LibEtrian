@@ -12,7 +12,7 @@ public class GlobalNameTable : List<string>
   public const string UseItemNameKey = "Use";
   public const string IngredientItemNameKey = "Ingredient";
 
-  public readonly static List<string> ExpectedEO2UKeys =
+  private static readonly List<string> ExpectedEO2UKeys =
   [
     EquipItemNameKey,
     UseItemNameKey,
