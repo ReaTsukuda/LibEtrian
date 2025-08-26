@@ -1,10 +1,10 @@
 ﻿namespace LibEtrian.Dungeon.Gather;
 
 /// <summary>
-/// An individual gather point defined in the EO2U version of itemPoint.tbl, which controls gather points.
+/// An individual gather point defined in the EO4 version of itemPoint.tbl, which controls gather points.
 /// </summary>
-[TableComponent(0x70)]
-public class GatherPointV4(U8[] data)
+[TableComponent(0x80)]
+public class GatherPointV2(U8[] data)
 {
   /// <summary>
   /// The floor this point is located on.
@@ -32,12 +32,12 @@ public class GatherPointV4(U8[] data)
   public S32 Type { get; } = BitConverter.ToInt32(data, 0x14);
   
   /// <summary>
-  /// How many times this gather point can be used per day. Always 1 in the retail game.
+  /// How many times this gather point can be used per day.
   /// </summary>
   public S32 AttemptsPerDay { get; } = BitConverter.ToInt32(data, 0x18);
   
   /// <summary>
-  /// Unknown. Always 1 in the retail game.
+  /// Unknown. Always 300 in the retail game.
   /// </summary>
   public S32 Unk1 { get; } = BitConverter.ToInt32(data, 0x1C);
 
@@ -45,11 +45,11 @@ public class GatherPointV4(U8[] data)
   /// The sets for this gather point. The last one doesn't have a trailing 0x00000000, so we have to get a bit ugly
   /// with parsing this.
   /// </summary>
-  public GatherPointV4Set[] Sets { get; } = data
+  public GatherPointV2Set[] Sets { get; } = data
     .Skip(0x24)
-    .Take(0x4C)
+    .Take(0x5C)
     .Concat(Enumerable.Repeat((U8)0x0, 4)) // Fake a trailing 0x00000000 on the last set.
-    .Split(0x28)
-    .Select(e => new GatherPointV4Set(e))
+    .Split(0x18)
+    .Select(e => new GatherPointV2Set(e))
     .ToArray();
 }

@@ -1,10 +1,11 @@
 ﻿namespace LibEtrian.Dungeon.Gather;
 
 /// <summary>
-/// An individual gather point defined in the EO2U version of itemPoint.tbl, which controls gather points.
+/// An individual gather point defined in the EO5/EON version of itemPoint.tbl, which controls gather points. Also
+/// controls fishing/forage points.
 /// </summary>
-[TableComponent(0x70)]
-public class GatherPointV4(U8[] data)
+[TableComponent(0x78)]
+public class GatherPointV5(U8[] data)
 {
   /// <summary>
   /// The floor this point is located on.
@@ -27,7 +28,7 @@ public class GatherPointV4(U8[] data)
   public S32 Y { get; } = BitConverter.ToInt32(data, 0x0C);
 
   /// <summary>
-  /// The type of this gather point: take (2), mine (1), and chop (0).
+  /// The type of this gather point: take (2), mine (1), chop (0), fish (3), and forage (4).
   /// </summary>
   public S32 Type { get; } = BitConverter.ToInt32(data, 0x14);
   
@@ -45,11 +46,11 @@ public class GatherPointV4(U8[] data)
   /// The sets for this gather point. The last one doesn't have a trailing 0x00000000, so we have to get a bit ugly
   /// with parsing this.
   /// </summary>
-  public GatherPointV4Set[] Sets { get; } = data
+  public GatherPointV5Set[] Sets { get; } = data
     .Skip(0x24)
-    .Take(0x4C)
+    .Take(0x54)
     .Concat(Enumerable.Repeat((U8)0x0, 4)) // Fake a trailing 0x00000000 on the last set.
-    .Split(0x28)
-    .Select(e => new GatherPointV4Set(e))
+    .Split(0x2C)
+    .Select(e => new GatherPointV5Set(e))
     .ToArray();
 }
