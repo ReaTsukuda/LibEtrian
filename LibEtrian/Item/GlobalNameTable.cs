@@ -59,7 +59,7 @@ public class GlobalNameTable : List<string>
 
   private void BuildEO5(Dictionary<string, string> paths)
   {
-    if (ExpectedEO2UKeys.Any(key => !paths.ContainsKey(key)))
+    if (ExpectedEO5Keys.Any(key => !paths.ContainsKey(key)))
     {
       throw new ArgumentException($"GlobalNameTable is missing required keys: " +
                                   $"{string.Join(", ", ExpectedEO5Keys.Where(key => !paths.ContainsKey(key)))}");
