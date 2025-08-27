@@ -11,12 +11,20 @@ public class GlobalNameTable : List<string>
   public const string EquipItemNameKey = "Equip";
   public const string UseItemNameKey = "Use";
   public const string IngredientItemNameKey = "Ingredient";
+  public const string FoodItemNameKey = "Ingredient";
 
   private static readonly List<string> ExpectedEO2UKeys =
   [
     EquipItemNameKey,
     UseItemNameKey,
     IngredientItemNameKey
+  ];
+
+  private static readonly List<string> ExpectedEO5Keys =
+  [
+    EquipItemNameKey,
+    UseItemNameKey,
+    FoodItemNameKey
   ];
   
   public GlobalNameTable(Dictionary<string, string> paths, Games game)
@@ -25,6 +33,9 @@ public class GlobalNameTable : List<string>
     {
       case Games.EO2U:
         BuildEO2U(paths);
+        break;
+      case Games.EO5:
+        BuildEO5(paths);
         break;
       default:
         Console.WriteLine($"Unsupported game for GlobalNameTable: {game}");
@@ -43,6 +54,20 @@ public class GlobalNameTable : List<string>
       .Concat(new Table(paths[UseItemNameKey]).Skip(1))
       .Concat(Enumerable.Repeat("Dummy", 100))
       .Concat(new Table(paths[IngredientItemNameKey])
+      ).ToList());
+  }
+
+  private void BuildEO5(Dictionary<string, string> paths)
+  {
+    if (ExpectedEO2UKeys.Any(key => !paths.ContainsKey(key)))
+    {
+      throw new ArgumentException($"GlobalNameTable is missing required keys: " +
+                                  $"{string.Join(", ", ExpectedEO5Keys.Where(key => !paths.ContainsKey(key)))}");
+    }
+    AddRange(new Table(paths[EquipItemNameKey])
+      .Concat(new Table(paths[UseItemNameKey]).Skip(1))
+      .Concat(Enumerable.Repeat("Dummy", 200))
+      .Concat(new Table(paths[FoodItemNameKey])
       ).ToList());
   }
 }
