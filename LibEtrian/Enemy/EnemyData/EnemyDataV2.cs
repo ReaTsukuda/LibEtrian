@@ -29,9 +29,10 @@ public class EnemyDataV2(U8[] data)
   public S32 Flags = BitConverter.ToInt32(data, 0x08);
 
   /// <summary>
-  /// Offset 0x0C. Unknown.
+  /// An arbitrary developer-set ID. Not used in battle, but seems to be used for determining the sort order of the
+  /// Monstrous Codex.
   /// </summary>
-  public S16 Unk2 = BitConverter.ToInt16(data, 0x0C);
+  public S32 LocationId = BitConverter.ToInt32(data, 0x0C);
 
   /// <summary>
   /// Offset 0x0E. Unknown.
@@ -123,4 +124,9 @@ public class EnemyDataV2(U8[] data)
     RequirementArg = data[0x62],
     RequirementType = data[0x63]
   };
+
+  /// <summary>
+  /// The enemy's drops.
+  /// </summary>
+  public List<Drop> Drops => [Drop1, Drop2, Drop3];
 }
