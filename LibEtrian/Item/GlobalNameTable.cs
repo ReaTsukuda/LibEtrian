@@ -10,8 +10,16 @@ public class GlobalNameTable : List<string>
 {
   public const string EquipItemNameKey = "Equip";
   public const string UseItemNameKey = "Use";
+  public const string SkyItemNameKey = "Sky";
   public const string IngredientItemNameKey = "Ingredient";
-  public const string FoodItemNameKey = "Ingredient";
+  public const string FoodItemNameKey = "Food";
+
+  private static readonly List<string> ExpectedEO4Keys =
+  [
+    EquipItemNameKey,
+    UseItemNameKey,
+    SkyItemNameKey,
+  ];
 
   private static readonly List<string> ExpectedEO2UKeys =
   [
@@ -31,6 +39,9 @@ public class GlobalNameTable : List<string>
   {
     switch (game)
     {
+      case Games.EO4:
+        BuildEO4(paths);
+        break;
       case Games.EO2U:
         BuildEO2U(paths);
         break;
@@ -43,6 +54,19 @@ public class GlobalNameTable : List<string>
     }
   }
 
+  private void BuildEO4(Dictionary<string, string> paths)
+  {
+    if (ExpectedEO4Keys.Any(key => !paths.ContainsKey(key)))
+    {
+      throw new ArgumentException($"GlobalNameTable is missing required keys: " +
+                                  $"{string.Join(", ", ExpectedEO4Keys.Where(key => !paths.ContainsKey(key)))}");
+    }
+    AddRange(new Table(paths[EquipItemNameKey])
+      .Concat(new Table(paths[UseItemNameKey]).Skip(1)
+      .Concat(Enumerable.Repeat("Dummy", 502))
+      .Concat(new Table(paths[SkyItemNameKey]))));
+  }
+
   private void BuildEO2U(Dictionary<string, string> paths)
   {
     if (ExpectedEO2UKeys.Any(key => !paths.ContainsKey(key)))
@@ -53,8 +77,7 @@ public class GlobalNameTable : List<string>
     AddRange(new Table(paths[EquipItemNameKey])
       .Concat(new Table(paths[UseItemNameKey]).Skip(1))
       .Concat(Enumerable.Repeat("Dummy", 100))
-      .Concat(new Table(paths[IngredientItemNameKey])
-      ).ToList());
+      .Concat(new Table(paths[IngredientItemNameKey])));
   }
 
   private void BuildEO5(Dictionary<string, string> paths)
@@ -67,7 +90,6 @@ public class GlobalNameTable : List<string>
     AddRange(new Table(paths[EquipItemNameKey])
       .Concat(new Table(paths[UseItemNameKey]).Skip(1))
       .Concat(Enumerable.Repeat("Dummy", 200))
-      .Concat(new Table(paths[FoodItemNameKey])
-      ).ToList());
+      .Concat(new Table(paths[FoodItemNameKey])));
   }
 }
