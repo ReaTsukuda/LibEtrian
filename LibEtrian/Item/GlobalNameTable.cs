@@ -10,9 +10,17 @@ public class GlobalNameTable : List<string>
 {
   public const string EquipItemNameKey = "Equip";
   public const string UseItemNameKey = "Use";
+  public const string SeaItemNameKey = "Sea";
   public const string SkyItemNameKey = "Sky";
   public const string IngredientItemNameKey = "Ingredient";
   public const string FoodItemNameKey = "Food";
+
+  private static readonly List<string> ExpectedEO3Keys =
+  [
+    EquipItemNameKey,
+    UseItemNameKey,
+    SeaItemNameKey
+  ];
 
   private static readonly List<string> ExpectedEO4Keys =
   [
@@ -34,11 +42,14 @@ public class GlobalNameTable : List<string>
     UseItemNameKey,
     FoodItemNameKey
   ];
-  
+
   public GlobalNameTable(Dictionary<string, string> paths, Games game)
   {
     switch (game)
     {
+      case Games.EO3:
+        BuildEO3(paths);
+        break;
       case Games.EO4:
         BuildEO4(paths);
         break;
@@ -54,6 +65,20 @@ public class GlobalNameTable : List<string>
     }
   }
 
+  private void BuildEO3(Dictionary<string, string> paths)
+  {
+    if (ExpectedEO3Keys.Any(key => !paths.ContainsKey(key)))
+    {
+      throw new ArgumentException($"GlobalNameTable is missing required keys: " +
+                                  $"{string.Join(", ", ExpectedEO3Keys.Where(key => !paths.ContainsKey(key)))}");
+    }
+    AddRange(new Table(paths[EquipItemNameKey])
+      .Concat(Enumerable.Repeat("Dummy", 29))
+      .Concat(new Table(paths[UseItemNameKey]).Skip(1)
+        .Concat(Enumerable.Repeat("Dummy", 512))
+        .Concat(new Table(paths[SeaItemNameKey]))));
+  }
+
   private void BuildEO4(Dictionary<string, string> paths)
   {
     if (ExpectedEO4Keys.Any(key => !paths.ContainsKey(key)))
@@ -63,8 +88,8 @@ public class GlobalNameTable : List<string>
     }
     AddRange(new Table(paths[EquipItemNameKey])
       .Concat(new Table(paths[UseItemNameKey]).Skip(1)
-      .Concat(Enumerable.Repeat("Dummy", 502))
-      .Concat(new Table(paths[SkyItemNameKey]))));
+        .Concat(Enumerable.Repeat("Dummy", 502))
+        .Concat(new Table(paths[SkyItemNameKey]))));
   }
 
   private void BuildEO2U(Dictionary<string, string> paths)
