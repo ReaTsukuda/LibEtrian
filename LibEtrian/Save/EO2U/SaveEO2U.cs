@@ -4,7 +4,7 @@
 /// mo2r##_game.sav. Contains the bulk of what people who want to edit their save will care about: party data, money,
 /// inventory/shop state, completion state.
 /// </summary>
-public class EO2UGameSave
+public class SaveEO2U
 {
   /// <summary>
   /// The save's file identifier, located at the very top of the file.

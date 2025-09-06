@@ -18,4 +18,8 @@
       <Folder Include="Text\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="HalfFullWidth" Version="1.0.0" />
+    </ItemGroup>
+
 </Project>
