@@ -12,7 +12,7 @@ public class CharacterEO5(U8[] data)
   /// <summary>
   /// The original binary data.
   /// </summary>
-  private U8[] OriginalData = data;
+  private readonly U8[] OriginalData = data;
 
   /// <summary>
   /// Contains two known flags: position 0 determines whether the character exists, position 1 determines whether
@@ -204,6 +204,38 @@ public class CharacterEO5(U8[] data)
   public string ClassName { get; set; } = Encoding.GetEncoding(932)
     .GetString(data.Skip(0x10E).Take(0x20).Where(b => b != 0).ToArray())
     .ToHalfwidthString();
+
+  /// <summary>
+  /// Applies the current values of the properties to the binary data.
+  /// </summary>
+  /// <returns>A new array of bytes, with the modifications applied.</returns>
+  public U8[] GetModifiedBinaryData()
+  {
+    var buffer = new U8[OriginalData.Length];
+    Array.Copy(OriginalData, buffer, OriginalData.Length);
+    buffer[0x000] = Status;
+    buffer[0x001] = RegisteredId;
+    buffer.OverwriteRange(BitConverter.GetBytes(GuildListingOrder), 0x002);
+    buffer[0x004] = Level;
+    buffer[0x005] = MaxLevel;
+    buffer[0x006] = AvailableSp;
+    buffer[0x007] = RetireTier;
+    buffer[0x008] = Class;
+    buffer.OverwriteRange(BitConverter.GetBytes(DisableStatus), 0x00C);
+    var equipmentBytes = new U8[Equipment.Count * 4];
+    Equipment
+      .Select((eq, i) => (eq, i))
+      .ToList()
+      .ForEach(eqt =>
+      {
+        equipmentBytes.OverwriteRange(BitConverter.GetBytes(eqt.eq.ItemId), eqt.i * 4);
+        equipmentBytes.OverwriteRange(BitConverter.GetBytes(eqt.eq.Rank), 2 + (eqt.i * 4));
+      });
+    buffer.OverwriteRange(equipmentBytes, 0x10);
+    Name.WriteFullwidthToBinary(buffer, 0x0B4, 10);
+    ClassName.WriteFullwidthToBinary(buffer, 0x10E, 16);
+    return buffer;
+  }
 
   /// <summary>
   /// For debugging purposes.

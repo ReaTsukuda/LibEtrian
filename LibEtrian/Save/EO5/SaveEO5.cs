@@ -9,6 +9,11 @@ namespace LibEtrian.Save.EO5;
 public class SaveEO5(U8[] data)
 {
   /// <summary>
+  /// The original binary data.
+  /// </summary>
+  private readonly U8[] OriginalData = data;
+  
+  /// <summary>
   /// The current hour in the save.
   /// </summary>
   public U8 Hour { get; set; } = data[0x0116];
@@ -41,7 +46,7 @@ public class SaveEO5(U8[] data)
   /// <summary>
   /// The guild name in the save.
   /// </summary>
-  public string GuildName => Encoding.GetEncoding(932)
+  public string GuildName { get; set; } = Encoding.GetEncoding(932)
     .GetString(data.Skip(0x2AB4).Take(0x12).Where(b => b != 0).ToArray())
     .ToHalfwidthString();
 
@@ -97,7 +102,7 @@ public class SaveEO5(U8[] data)
   /// The hound name in the save. Unlike guild/character names, this is null-terminated. Bad things will happen
   /// if you don't null terminate it.
   /// </summary>
-  public string HoundName => Encoding.GetEncoding(932)
+  public string HoundName { get; set; } = Encoding.GetEncoding(932)
     .GetString(data.Skip(0x304C).Take(0x14).Where(b => b != 0).ToArray())
     .ToHalfwidthString();
   
@@ -105,7 +110,7 @@ public class SaveEO5(U8[] data)
   /// The hawk name in the save. Unlike guild/character names, this is null-terminated. Bad things will happen
   /// if you don't null terminate it.
   /// </summary>
-  public string HawkName => Encoding.GetEncoding(932)
+  public string HawkName { get; set; } = Encoding.GetEncoding(932)
     .GetString(data.Skip(0x3060).Take(0x14).Where(b => b != 0).ToArray())
     .ToHalfwidthString();
 
@@ -143,4 +148,26 @@ public class SaveEO5(U8[] data)
     .Skip(0x5DAC)
     .Take(400)
     .ToArray();
+
+  /// <summary>
+  /// Applies the current values of the properties to the binary data.
+  /// </summary>
+  /// <returns>A new array of bytes, with the modifications applied.</returns>
+  public U8[] GetModifiedBinaryData()
+  {
+    var buffer = new U8[OriginalData.Length];
+    Array.Copy(OriginalData, buffer, OriginalData.Length);
+    buffer[0x0116] = Hour;
+    buffer[0x0117] = Minute;
+    buffer.OverwriteRange(BitConverter.GetBytes(Day), 0x118);
+    buffer.OverwriteRange(BitConverter.GetBytes(Ental), 0x0140);
+    for (var i = 0; i < Characters.Length; i += 1)
+    {
+      buffer.OverwriteRange(Characters[i].GetModifiedBinaryData(), 0x144 + (0x150 * i));
+    }
+    GuildName.WriteFullwidthToBinary(buffer, 0x2AB4, 9);
+    HoundName.WriteFullwidthToBinary(buffer, 0x304C, 9);
+    HawkName.WriteFullwidthToBinary(buffer, 0x3060, 9);
+    return buffer;
+  }
 }

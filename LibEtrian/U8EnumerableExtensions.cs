@@ -13,4 +13,12 @@ public static class U8EnumerableExtensions
       .GroupBy(v => v.Index / entryLength)
       .Select(v => v.Select(a => a.Value).ToArray());
   }
+
+  public static void OverwriteRange(this U8[] originalData, U8[] newData, S32 offset)
+  {
+    for (var i = 0; i < newData.Length; i += 1)
+    {
+      originalData[offset + i] =  newData[i];
+    }
+  }
 }
