@@ -165,9 +165,20 @@ public class SaveEO5(U8[] data)
     {
       buffer.OverwriteRange(Characters[i].GetModifiedBinaryData(), 0x144 + (0x150 * i));
     }
+    var inventoryBytes = new U8[Inventory.Length * 4];
+    Inventory
+      .Select((ini, i) => (eq: ini, i))
+      .ToList()
+      .ForEach(init =>
+      {
+        inventoryBytes.OverwriteRange(BitConverter.GetBytes(init.eq.ItemId), init.i * 4);
+        inventoryBytes.OverwriteRange(BitConverter.GetBytes(init.eq.Rank), 2 + (init.i * 4));
+      });
+    buffer.OverwriteRange(inventoryBytes, 0x2ADC);
     GuildName.WriteFullwidthToBinary(buffer, 0x2AB4, 9);
     HoundName.WriteFullwidthToBinary(buffer, 0x304C, 9);
     HawkName.WriteFullwidthToBinary(buffer, 0x3060, 9);
+    buffer.OverwriteRange(ShopStock, 0x4FD8);
     return buffer;
   }
 }
