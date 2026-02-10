@@ -99,18 +99,18 @@ public class SaveEO5(U8[] data)
     .ToArray();
   
   /// <summary>
-  /// The hound name in the save. Unlike guild/character names, this is null-terminated. Bad things will happen
-  /// if you don't null terminate it.
-  /// </summary>
-  public string HoundName { get; set; } = Encoding.GetEncoding(932)
-    .GetString(data.Skip(0x304C).Take(0x14).Where(b => b != 0).ToArray())
-    .ToHalfwidthString();
-  
-  /// <summary>
   /// The hawk name in the save. Unlike guild/character names, this is null-terminated. Bad things will happen
   /// if you don't null terminate it.
   /// </summary>
   public string HawkName { get; set; } = Encoding.GetEncoding(932)
+    .GetString(data.Skip(0x304C).Take(0x14).Where(b => b != 0).ToArray())
+    .ToHalfwidthString();
+  
+  /// <summary>
+  /// The hound name in the save. Unlike guild/character names, this is null-terminated. Bad things will happen
+  /// if you don't null terminate it.
+  /// </summary>
+  public string HoundName { get; set; } = Encoding.GetEncoding(932)
     .GetString(data.Skip(0x3060).Take(0x14).Where(b => b != 0).ToArray())
     .ToHalfwidthString();
 
@@ -176,8 +176,8 @@ public class SaveEO5(U8[] data)
       });
     buffer.OverwriteRange(inventoryBytes, 0x2ADC);
     GuildName.WriteFullwidthToBinary(buffer, 0x2AB4, 9);
-    HoundName.WriteFullwidthToBinary(buffer, 0x304C, 9);
-    HawkName.WriteFullwidthToBinary(buffer, 0x3060, 9);
+    HoundName.WriteFullwidthToBinary(buffer, 0x3060, 9);
+    HawkName.WriteFullwidthToBinary(buffer, 0x304C, 9);
     buffer.OverwriteRange(ShopStock, 0x4FD8);
     return buffer;
   }
