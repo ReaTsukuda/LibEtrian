@@ -35,7 +35,22 @@ public class Ymd
     var data = File.ReadAllBytes(path);
     // TODO: version string check
     var header = new Header(data);
-    Tiles = TableBuilder.BuildTable<Tile>(data, TilesPerRow * RowsPerFloor, header.TileDataOffset);
+    // Normal dungeon floors, as best as I can tell, set a tile data end offset of 0 and just let the length be inferred
+    // from the objects section. 
+    if (header.TileDataEnd == 0)
+    {
+      Tiles = TableBuilder.BuildTable<Tile>(data, TilesPerRow * RowsPerFloor, header.TileDataOffset);
+    }
+    // However, MapB26 (the sea) is unique and actually uses this value, and is the only map in the game that's larger
+    // than 35x30, so it has to be handled specially.
+    else
+    {
+      var tileLength =
+        (Attribute.GetCustomAttribute(typeof(Tile), typeof(TableComponentAttribute)) as TableComponentAttribute)!
+        .Length;
+      var tileCount = (header.TileDataEnd - header.TileDataOffset) / tileLength;
+      Tiles = TableBuilder.BuildTable<Tile>(data, tileCount, header.TileDataOffset);
+    }
     Stairs = TableBuilder.BuildTable<StairsStruct>(data, header.StairsCount, header.StairsOffset);
   }
 
@@ -47,12 +62,7 @@ public class Ymd
   /// <returns>The tile at the provided coordinates.</returns>
   public Tile GetTile(S32 x, S32 y)
   {
-    // Very basic bounds checking.
-    if (x >= TilesPerRow || y >= RowsPerFloor)
-    {
-      throw new ArgumentException($"Invalid coordinate: ({x}, {y})");
-    }
-    return Tiles[(y * RowsPerFloor) + x];
+    return Tiles[(y * TilesPerRow) + x];
   }
 
   /// <summary>
@@ -88,7 +98,7 @@ public class Ymd
     /// </summary>
     public enum Types
     {  
-      Wall = 0x00,
+      InvisibleOob = 0x00,
       Walkable = 0x01,
       Damage = 0x02,
       Ice = 0x03,
@@ -101,7 +111,7 @@ public class Ymd
       NoMap = 0x0B,
       Spinner = 0x0C,
       Campsite = 0x0D,
-      InvisibleOob = 0x0E,
+      Wall = 0x0E,
       VisibleOob = 0x0F,
       Door = 0x10,
       GeomagneticPole = 0x11,
@@ -183,7 +193,12 @@ public class Ymd
 
   private class Header(U8[] data)
   {    
-    public S32 TileDataOffset => BitConverter.ToInt32(data, 0x8);
+    public S32 TileDataOffset => BitConverter.ToInt32(data, 0x08);
+    /// <summary>
+    /// In EO3, this is only used for MapB26, the sea, presumably due to a lack of any objects from which the end of
+    /// the tile data can be inferred.
+    /// </summary>
+    public S32 TileDataEnd => BitConverter.ToInt32(data, 0x0C);
     public S32 StairsCount => BitConverter.ToInt32(data, 0x10);
     public S32 StairsOffset => BitConverter.ToInt32(data, 0x14);
     public S32 ChestsCount => BitConverter.ToInt32(data, 0x18);
