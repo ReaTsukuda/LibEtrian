@@ -17,6 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Dungeon\MoriMap\" />
       <Folder Include="Text\" />
     </ItemGroup>
 

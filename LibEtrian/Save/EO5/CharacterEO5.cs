@@ -232,6 +232,7 @@ public class CharacterEO5(U8[] data)
         equipmentBytes.OverwriteRange(BitConverter.GetBytes(eqt.eq.Rank), 2 + (eqt.i * 4));
       });
     buffer.OverwriteRange(equipmentBytes, 0x10);
+    buffer.OverwriteRange(BitConverter.GetBytes(Exp), 0x0B0);
     buffer.OverwriteRange(ClassSkillLevels, 0x0CA);
     buffer.OverwriteRange(RaceSkillLevels, 0x0DE);
     Name.WriteFullwidthToBinary(buffer, 0x0B4, 10);
